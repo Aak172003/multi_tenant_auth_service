@@ -14,7 +14,8 @@ function login(username: string): string {
     // eslint fix into dot notation
 
     const name = user["name"];
-    console.log(name);
+    const age = user["age"]
+    console.log(name, age);
 
     return username;
 }
