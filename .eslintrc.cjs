@@ -24,7 +24,7 @@ module.exports = {
     rules: {
         // if console give error
         // "no-console": "error",
-        
+
         "dot-notation": "error",
     },
 };
