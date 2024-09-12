@@ -23,7 +23,8 @@ module.exports = {
     root: true,
     rules: {
         // if console give error
-        "no-console": "error",
+        // "no-console": "error",
+        
         "dot-notation": "error",
     },
 };

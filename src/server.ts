@@ -13,7 +13,7 @@ function login(username: string): string {
     };
     // eslint fix into dot notation
 
-    const name = user.name;
+    const name = user["name"];
     console.log(name);
 
     return username;

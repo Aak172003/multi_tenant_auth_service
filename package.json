@@ -1,25 +1,27 @@
 {
-    "name": "multi_tenant_auth_service",
-    "version": "1.0.0",
-    "description": "A user management micro_service",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "node dist/server.js",
-        "format:check": "prettier . --check",
-        "format:fix": "px prettier . --write",
-        "lint": "eslint .",
-        "lint:fix": "eslint . --fix"
-    },
-    "author": "Aakash Prajapati <prajaptiaakash364@gmail.com>",
-    "license": "ISC",
-    "devDependencies": {
-        "@types/node": "^22.5.4",
-        "@typescript-eslint/eslint-plugin": "^8.5.0",
-        "@typescript-eslint/parser": "^8.5.0",
-        "eslint": "^8.57.0",
-        "eslint-config-prettier": "^9.1.0",
-        "prettier": "3.3.3",
-        "typescript": "^5.5.4"
-    }
+  "name": "multi_tenant_auth_service",
+  "version": "1.0.0",
+  "description": "A user management micro_service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node dist/server.js",
+    "format:check": "prettier . --check",
+    "format:fix": "px prettier . --write",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prepare": "husky"
+  },
+  "author": "Aakash Prajapati <prajaptiaakash364@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.5.4",
+    "@typescript-eslint/eslint-plugin": "^8.5.0",
+    "@typescript-eslint/parser": "^8.5.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "husky": "^9.1.6",
+    "prettier": "3.3.3",
+    "typescript": "^5.5.4"
+  }
 }
