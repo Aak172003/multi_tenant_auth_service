@@ -5,18 +5,17 @@
 // .
 
 function login(username: string): string {
-    
-        
-                             console.log("username ------ username ----- ", username);
+    console.log("username ------ username ----- ", username);
 
-const user = {
+    const user = {
         name: "Aakash",
         age: 17,
     };
     // eslint fix into dot notation
 
-const name = user["name"];
-                        const age = user["age"]
+    const name = user.name;
+    const age = user.age;
+
     console.log(name, age);
 
     return username;
