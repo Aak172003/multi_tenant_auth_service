@@ -1,6 +1,20 @@
+import app from "./app";
 import { Config } from "./config";
 
-// Now this can access PORT Value from , env file
-console.log("PORT", Config.PORT);
+const startServer = () => {
+    const PORT = Config.PORT;
+    const ENVIRONMENT = Config.NODE_ENV;
+    try {
+        app.listen(PORT, () => {
+            console.log("---------------------------------------");
+            console.log(
+                `Welcome to Port No.${PORT} , My Current Env is ${ENVIRONMENT}`,
+            );
+        });
+    } catch (error) {
+        console.log(error);
+        process.exit(1);
+    }
+};
 
-console.log("Node Environment", Config.NODE_ENV);
+startServer();
