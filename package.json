@@ -10,7 +10,7 @@
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "prepare": "husky",
-        "test": "jest --watch --runInBand"
+        "test": "jest --watch"
     },
     "author": "Aakash Prajapati <prajaptiaakash364@gmail.com>",
     "license": "ISC",

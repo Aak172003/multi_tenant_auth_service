@@ -10,13 +10,13 @@ describe("App", () => {
     });
 
     // Either we can use test or it
-    test("should calculate multiplication", () => {
+    it("should calculate multiplication", () => {
         const result = calculateMultiply(10, 20);
 
         expect(result).toBe(200);
     });
 
-    test("should return 200 status", async () => {
+    it("should return 200 status", async () => {
         const response = await request(app).get("/").send();
 
         expect(response.statusCode).toBe(200);
