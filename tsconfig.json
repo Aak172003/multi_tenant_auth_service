@@ -113,5 +113,5 @@
     "include": [
         "src/**/*",
         "jest.config.js" // Add this line
-      ]
+    ]
 }
