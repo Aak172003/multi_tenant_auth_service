@@ -7,7 +7,8 @@ const app = express();
 
 app.get("/", (req, res) => {
     res.status(200).json({
-        message: "Welcome to Auth Service",
+        // message: "Welcome to Auth Service",
+        message: "welcome to Docker Auth Service",
         status: "Ok",
     });
 });
