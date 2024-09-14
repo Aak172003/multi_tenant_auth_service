@@ -7,6 +7,14 @@ const startServer = () => {
     const ENVIRONMENT = Config.NODE_ENV;
     try {
         // throw new Error("something went wrong");
+
+        // const err = createHttpError(
+        //     401,
+        //     "you are not allowed to access this page ",
+        // );
+
+        // throw err;
+
         app.listen(PORT, () => {
             console.log(
                 `Welcome to Port No.${PORT} , My Current Env is ${ENVIRONMENT}`,
