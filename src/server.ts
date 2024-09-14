@@ -17,7 +17,7 @@ const startServer = () => {
 
         app.listen(PORT, () => {
             console.log(
-                `Welcome to Port No.${PORT} , My Current Env is ${ENVIRONMENT}`,
+                `Welcome to Port No.${PORT}, My Current Env is ${ENVIRONMENT}`,
             );
 
             logger.info(`Listning on PORT : ${PORT}`, {
