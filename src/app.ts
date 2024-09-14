@@ -5,16 +5,16 @@ import createHttpError, { HttpError } from "http-errors";
 
 const app = express();
 
-app.get("/", async (req, res, next) => {
+app.get("/", (req, res) => {
+    res.json({
+        message: "Welcome to Auth Service",
+        status: "Ok",
+    });
+});
+
+app.get("/error", async (req, res, next) => {
     const err = createHttpError(401, "you are not allowed to access this page");
-
-    // throw err;
     return next(err);
-
-    // res.json({
-    //     message: "Welcome to Auth Service",
-    //     status: "Ok",
-    // });
 });
 
 // Global Middleware -> which automaticcaly execute whenever we hit any api endpoint
