@@ -2,6 +2,10 @@ import { calculateMultiply, calculateSum } from "./src/utils";
 import app from "./src/app";
 import request from "supertest";
 
+// We can skip any test cases for testing
+
+// describe("App", () => {
+
 describe("App", () => {
     test("should calculate sum ", () => {
         const result = calculateSum(10, 20);
