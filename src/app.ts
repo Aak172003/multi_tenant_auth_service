@@ -1,3 +1,6 @@
+// This is import in my global application
+import "reflect-metadata";
+
 // Express Provide Request and Response
 import express, { Request, Response, NextFunction } from "express";
 import logger from "./config/logger";

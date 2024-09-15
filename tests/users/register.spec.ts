@@ -4,6 +4,7 @@ import app from "../../src/app";
 describe("Post auth/register", () => {
     // happy path
     describe("Given all fields", () => {
+        // First Test
         test("should return the 201 statusCode", async () => {
             // AAA -> define below
 
@@ -46,6 +47,22 @@ describe("Post auth/register", () => {
             expect(
                 (response.headers as Record<string, string>)["content-type"],
             ).toEqual(expect.stringContaining("json"));
+        });
+
+        // Third Test
+        test("should persist the user in the database", async () => {
+            // Arrange,
+            const userData = {
+                firstName: "Aakash",
+                lastName: "A",
+                email: "aakashabc@gmail.com",
+                password: "secret",
+            };
+
+            // Act
+            await request(app).post("/auth/register").send(userData);
+
+            // Assert
         });
     });
 
