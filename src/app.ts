@@ -2,6 +2,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import logger from "./config/logger";
 import createHttpError, { HttpError } from "http-errors";
+import authRouter from "./routes/auth";
 
 const app = express();
 
@@ -17,6 +18,9 @@ app.get("/error", async (req, res, next) => {
     const err = createHttpError(401, "you are not allowed to access this page");
     return next(err);
 });
+
+// This is Api EndPoints fpr User Register
+app.use("/auth", authRouter);
 
 // Global Middleware -> which automaticcaly execute whenever we hit any api endpoint
 
