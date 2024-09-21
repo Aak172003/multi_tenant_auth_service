@@ -1,7 +1,29 @@
 import request from "supertest";
 import app from "../../src/app";
+import { DataSource } from "typeorm";
+import { AppDataSource } from "../../src/config/data-source";
+// import { User } from "../../src/entity/User";
+import { truncateTables } from "../utils";
+import { User } from "../../src/entity/User";
 
 describe("Post auth/register", () => {
+    let connection: DataSource;
+
+    beforeAll(async () => {
+        connection = await AppDataSource.initialize();
+
+        console.log("connection inside before all ---- ", connection);
+    });
+
+    beforeEach(async () => {
+        // Database Truncate
+        await truncateTables(connection);
+    });
+
+    afterAll(async () => {
+        await connection.destroy();
+    });
+
     // happy path
     describe("Given all fields", () => {
         // First Test
@@ -20,6 +42,8 @@ describe("Post auth/register", () => {
             const response = await request(app)
                 .post("/auth/register")
                 .send(userData);
+
+            console.log("this is response ----- ", response);
 
             // Assert -> matcher
             expect(response.statusCode).toBe(201);
@@ -63,6 +87,14 @@ describe("Post auth/register", () => {
             await request(app).post("/auth/register").send(userData);
 
             // Assert
+            const userRepositery = connection.getRepository(User);
+
+            console.log("this is user Repositery === ", userRepositery);
+            // return list of user
+            const users = userRepositery.find();
+
+            // This check either list have atleast one user which i am trying to find
+            expect(users).toHaveLength(1);
         });
     });
 
