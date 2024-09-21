@@ -1,4 +1,5 @@
 // This is import in my global application
+// for Type ORM -> basicallly type ORM is used to connect our application wiyh Postgress database
 import "reflect-metadata";
 
 // Express Provide Request and Response

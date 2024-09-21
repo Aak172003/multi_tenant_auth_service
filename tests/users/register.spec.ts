@@ -49,14 +49,14 @@ describe("Post auth/register", () => {
             ).toEqual(expect.stringContaining("json"));
         });
 
-        // Third Test
+        // Third Test - while entring any user data into database
         test("should persist the user in the database", async () => {
             // Arrange,
             const userData = {
                 firstName: "Aakash",
-                lastName: "A",
-                email: "aakashabc@gmail.com",
-                password: "secret",
+                lastName: "Prajapati",
+                email: "aakash@gmail.com",
+                password: "93104@Aak",
             };
 
             // Act
