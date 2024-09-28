@@ -96,6 +96,7 @@ describe("Post auth/register", () => {
 
             // This check either list have atleast one user which i am trying to find
             expect(users).toHaveLength(1);
+            expect(users[0].firstName).toBe(userData.firstName);
         });
 
         //     // Arrange

@@ -1,6 +1,9 @@
 # Ignore artifacts:
 build
 coverage
+package.json
+package-lock.json
+tsconfig.json
 
 # Ignore all HTML files:
 **/*.html

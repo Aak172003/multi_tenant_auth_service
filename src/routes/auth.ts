@@ -1,10 +1,16 @@
 import express from "express";
 import { AuthController } from "../controllers/AuthController";
+import { UserService } from "../services/UserService";
+import { AppDataSource } from "../config/data-source";
+import { User } from "../entity/User";
 
 const authRouter = express.Router();
 
+const userRepositery = AppDataSource.getRepository(User);
+
 // Creating an object or instance
-const authController = new AuthController();
+const userService = new UserService(userRepositery);
+const authController = new AuthController(userService);
 
 authRouter.post("/register", async (req, res) => {
     console.log("Hit /register Route");

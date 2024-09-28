@@ -1,36 +1,27 @@
-import { Request, Response } from "express";
-import { AppDataSource } from "../config/data-source";
-import { User } from "../entity/User";
+import { Response } from "express";
+import { RegisterUserInterface } from "../types";
+import { UserService } from "../services/UserService";
 
-interface UserData {
-    firstName: string;
-    lastName: string;
-    password: string;
-    email: string;
-}
-interface RegisterUserInterface extends Request {
-    body: UserData;
-}
 export class AuthController {
+    // userService: UserService;
+    // // constructor
+    // constructor(userService: UserService) {
+    //     this.userService = userService;
+    // }
+
+    // 2nd way after refactoring
+
+    // constructor
+    constructor(private userService: UserService) {}
     // class Method 1
     async register(req: RegisterUserInterface, res: Response) {
         const { firstName, lastName, email, password } = req.body;
 
-        // to store any user in our db , we need to use type orm repositery
-        const userRepository = AppDataSource.getRepository(User);
-
-        // const userResult = await userRepository.save({
-        //     firstName,
-        //     lastName,
-        //     password,
-        //     email,
-        // });
-
-        await userRepository.save({
+        await this.userService.createUser({
             firstName,
             lastName,
-            password,
             email,
+            password,
         });
 
         // res.status(201).send();
