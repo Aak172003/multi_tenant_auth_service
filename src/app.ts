@@ -10,6 +10,9 @@ import authRouter from "./routes/auth";
 
 const app = express();
 
+// By default express json middleware pareser is not enabled , so we need to enable manually
+app.use(express.json());
+
 app.get("/", (req, res) => {
     res.status(200).json({
         // message: "Welcome to Auth Service",

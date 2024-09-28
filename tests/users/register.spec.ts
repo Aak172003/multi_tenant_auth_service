@@ -15,13 +15,14 @@ describe("Post auth/register", () => {
         console.log("connection inside before all ---- ", connection);
     });
 
+    // before apply any test , first we need to clear the whole data
     beforeEach(async () => {
         // Database Truncate
         await truncateTables(connection);
     });
 
     afterAll(async () => {
-        await connection.destroy();
+        await connection?.destroy();
     });
 
     // happy path
@@ -74,12 +75,13 @@ describe("Post auth/register", () => {
         });
 
         // Third Test - while entring any user data into database
+
         test("should persist the user in the database", async () => {
             // Arrange,
             const userData = {
                 firstName: "Aakash",
                 lastName: "Prajapati",
-                email: "aakash@gmail.com",
+                email: "aakash123@gmail.com",
                 password: "93104@Aak",
             };
 
@@ -89,13 +91,42 @@ describe("Post auth/register", () => {
             // Assert
             const userRepositery = connection.getRepository(User);
 
-            console.log("this is user Repositery === ", userRepositery);
             // return list of user
-            const users = userRepositery.find();
+            const users = await userRepositery.find();
 
             // This check either list have atleast one user which i am trying to find
             expect(users).toHaveLength(1);
         });
+
+        //     // Arrange
+        //     const userData = {
+        //         firstName: "Aakash",
+        //         lastName: "Prajapati",
+        //         email: undefined,
+        //         password: "93104@Aak",
+        //     };
+
+        //     // Act
+        //     await request(app).post("/auth/register").send(userData);
+
+        //     // Assert
+        //     const userRepository = AppDataSource.getRepository(User);
+
+        //     // Ensure the repository is initialized properly
+        //     console.log("This is the user repository: ", userRepository);
+
+        //     // Wait for the users to be fetched
+        //     const users = await userRepository.find();
+
+        //     // Log the result for debugging
+        //     console.log("Fetched users: ", users);
+
+        //     // This check ensures at least one user was found
+        //     expect(users).toHaveLength(1);
+
+        //     // Optionally, check if the user is the one we just inserted
+        //     expect(users[0].email).toBe(userData.email);
+        // });
     });
 
     // sad path
