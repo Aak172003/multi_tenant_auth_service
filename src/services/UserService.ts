@@ -2,6 +2,7 @@ import { Repository } from "typeorm";
 import { User } from "../entity/User";
 import { UserData } from "../types";
 import createHttpError from "http-errors";
+import { Roles } from "../constants";
 
 export class UserService {
     // Craete contructor
@@ -33,6 +34,8 @@ export class UserService {
                 lastName,
                 password,
                 email,
+                role: Roles.CUSTOMER,
+                dob: "17 July 2024",
             });
 
             console.log("user ----- ", user);

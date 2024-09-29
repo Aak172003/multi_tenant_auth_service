@@ -3,10 +3,10 @@ import app from "../../src/app";
 import { DataSource } from "typeorm";
 import { AppDataSource } from "../../src/config/data-source";
 // import { User } from "../../src/entity/User";
-import { truncateTables } from "../utils";
+
 import { User } from "../../src/entity/User";
-import exp from "constants";
-import { response } from "express";
+import { CUSTOM_DOB, Roles } from "../../src/constants";
+// import { response } from "express";
 
 describe("Post auth/register", () => {
     let connection: DataSource;
@@ -19,8 +19,13 @@ describe("Post auth/register", () => {
 
     // before apply any test , first we need to clear the whole data
     beforeEach(async () => {
+        // first drop the database
+
+        await connection.dropDatabase();
+
+        await connection.synchronize();
         // Database Truncate
-        await truncateTables(connection);
+        // await truncateTables(connection);
     });
 
     afterAll(async () => {
@@ -136,7 +141,34 @@ describe("Post auth/register", () => {
             console.log("users from id test case -- ", createdUser);
 
             // Ensure the response contains the ID of the created user
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(response.body.id).toBe(createdUser?.id);
+        });
+
+        it("should assign a customer role", async () => {
+            // Arrange,
+            const userData = {
+                firstName: "Aakash",
+                lastName: "Prajapati",
+                email: "aakash123@gmail.com",
+                password: "93104@Aak",
+            };
+
+            // Act
+            await request(app).post("/auth/register").send(userData);
+
+            const userRepositery = connection.getRepository(User);
+
+            // return list of user
+            const users = await userRepositery.find();
+
+            console.log("customer role ---- ", users);
+
+            expect(users[0]).toHaveProperty("role");
+            expect(users[0]).toHaveProperty("dob");
+
+            expect(users[0].role).toBe(Roles.CUSTOMER);
+            expect(users[0].dob).toBe(CUSTOM_DOB);
         });
 
         //     const userData = {

@@ -29,8 +29,9 @@ export const AppDataSource = new DataSource({
 
     // synchronize: true,
 
-    synchronize: Config.NODE_ENV === "test" || Config.NODE_ENV === "dev", // true
+    // synchronize: Config.NODE_ENV === "test" || Config.NODE_ENV === "dev", // true
 
+    synchronize: false,
     logging: false,
     entities: [User],
     migrations: [],
