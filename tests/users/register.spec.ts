@@ -5,6 +5,8 @@ import { AppDataSource } from "../../src/config/data-source";
 // import { User } from "../../src/entity/User";
 import { truncateTables } from "../utils";
 import { User } from "../../src/entity/User";
+import exp from "constants";
+import { response } from "express";
 
 describe("Post auth/register", () => {
     let connection: DataSource;
@@ -94,12 +96,49 @@ describe("Post auth/register", () => {
             // return list of user
             const users = await userRepositery.find();
 
+            console.log("from register test -------- ", users);
+
             // This check either list have atleast one user which i am trying to find
             expect(users).toHaveLength(1);
             expect(users[0].firstName).toBe(userData.firstName);
         });
 
-        //     // Arrange
+        // this todo means we can implement this test in future
+        it.todo("should return an id of created user");
+
+        test("should return an id ", async () => {
+            // Arrange,
+            const userData = {
+                firstName: "Aakash",
+                lastName: "Prajapati",
+                email: "aakash123@gmail.com",
+                password: "93104@Aak",
+            };
+
+            console.log("userData ----- ", userData);
+
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            console.log("this is response --- ", response);
+            console.log("this is responseBody --- ", response.body);
+
+            // Assert
+            const userRepositery = connection.getRepository(User);
+
+            // return list of user
+            const createdUser = await userRepositery.findOneBy({
+                email: userData.email,
+            });
+
+            console.log("users from id test case -- ", createdUser);
+
+            // Ensure the response contains the ID of the created user
+            expect(response.body.id).toBe(createdUser?.id);
+        });
+
         //     const userData = {
         //         firstName: "Aakash",
         //         lastName: "Prajapati",

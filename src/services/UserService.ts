@@ -1,6 +1,7 @@
 import { Repository } from "typeorm";
 import { User } from "../entity/User";
 import { UserData } from "../types";
+import createHttpError from "http-errors";
 
 export class UserService {
     // Craete contructor
@@ -26,13 +27,23 @@ export class UserService {
 
         // I remove this because implement dependency injection
         // const userRepository = AppDataSource.getRepository(User);
-        const user = await this.userRepositery.save({
-            firstName,
-            lastName,
-            password,
-            email,
-        });
+        try {
+            const user = await this.userRepositery.save({
+                firstName,
+                lastName,
+                password,
+                email,
+            });
 
-        console.log("user ----- ", user);
+            console.log("user ----- ", user);
+            return user;
+        } catch (err) {
+            console.log("err----", err);
+            const error = createHttpError(
+                500,
+                "Failed to store data in database ",
+            );
+            throw error;
+        }
     }
 }
