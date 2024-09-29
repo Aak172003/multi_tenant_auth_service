@@ -9,6 +9,7 @@ const authRouter = express.Router();
 const userRepositery = AppDataSource.getRepository(User);
 
 // Creating an object or instance
+// here we need to pass userRepositery because userservice require userRepositery, to perform save operation
 const userService = new UserService(userRepositery);
 const authController = new AuthController(userService);
 

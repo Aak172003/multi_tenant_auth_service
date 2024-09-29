@@ -3,7 +3,16 @@ import { User } from "../entity/User";
 import { UserData } from "../types";
 
 export class UserService {
-    constructor(private userRepositery: Repository<User>) {}
+    // Craete contructor
+    // constructor(private userRepositery: Repository<User>) {}
+
+    userRepositery: Repository<User>;
+
+    // The userRepositery will have all the properties and methods that the Repository class provides.
+    // UserRepositery is not a custom thing , so we don't need to pass from any where , we simplement create in create in constructor
+    constructor(userRepositery: Repository<User>) {
+        this.userRepositery = userRepositery;
+    }
 
     async createUser({ firstName, lastName, password, email }: UserData) {
         console.log("data", {
