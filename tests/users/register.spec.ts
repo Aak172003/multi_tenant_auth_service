@@ -171,34 +171,30 @@ describe("Post auth/register", () => {
             expect(users[0].dob).toBe(CUSTOM_DOB);
         });
 
-        //     const userData = {
-        //         firstName: "Aakash",
-        //         lastName: "Prajapati",
-        //         email: undefined,
-        //         password: "93104@Aak",
-        //     };
+        test("Should store the hashed password", async () => {
+            const userData = {
+                firstName: "Aakash",
+                lastName: "Prajapati",
+                email: "aakash123@gmail.com",
+                password: "Aak@123",
+            };
 
-        //     // Act
-        //     await request(app).post("/auth/register").send(userData);
+            // Act
+            await request(app).post("/auth/register").send(userData);
 
-        //     // Assert
-        //     const userRepository = AppDataSource.getRepository(User);
+            // Assert
 
-        //     // Ensure the repository is initialized properly
-        //     console.log("This is the user repository: ", userRepository);
+            const userRepositery = connection.getRepository(User);
 
-        //     // Wait for the users to be fetched
-        //     const users = await userRepository.find();
+            // return list of user
+            const users = await userRepositery.find();
 
-        //     // Log the result for debugging
-        //     console.log("Fetched users: ", users);
+            console.log("from Should store the hashed password", users);
+            expect(users[0].password).not.toBe(userData.password);
+            expect(users[0].password).toHaveLength(60);
 
-        //     // This check ensures at least one user was found
-        //     expect(users).toHaveLength(1);
-
-        //     // Optionally, check if the user is the one we just inserted
-        //     expect(users[0].email).toBe(userData.email);
-        // });
+            expect(users[0].password).toMatch(/^\$2b\$\d+\$/);
+        });
     });
 
     // sad path

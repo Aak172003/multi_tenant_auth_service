@@ -3,6 +3,7 @@ import { User } from "../entity/User";
 import { UserData } from "../types";
 import createHttpError from "http-errors";
 import { Roles } from "../constants";
+import bcrypt from "bcrypt";
 
 export class UserService {
     // Craete contructor
@@ -24,6 +25,10 @@ export class UserService {
             email,
         });
 
+        // hashed the password
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
         // to store any user in our db , we need to use type orm repositery
 
         // I remove this because implement dependency injection
@@ -32,7 +37,7 @@ export class UserService {
             const user = await this.userRepositery.save({
                 firstName,
                 lastName,
-                password,
+                password: hashedPassword,
                 email,
                 role: Roles.CUSTOMER,
                 dob: "17 July 2024",
