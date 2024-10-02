@@ -2,7 +2,6 @@ import { NextFunction, Response } from "express";
 import { RegisterUserInterface } from "../types";
 import { UserService } from "../services/UserService";
 import { Logger } from "winston";
-import createHttpError from "http-errors";
 import { validationResult } from "express-validator";
 
 export class AuthController {
@@ -39,7 +38,6 @@ export class AuthController {
 
         // Validation
         const result = validationResult(req);
-        console.log("this is result --------- ", result);
 
         if (!result.isEmpty()) {
             return res.status(400).json({ errors: result.array() });
@@ -48,7 +46,7 @@ export class AuthController {
             firstName,
             lastName,
             email,
-            password: "************",
+            password: "*****",
         });
         try {
             const createdUser = await this.userService.createUser({
@@ -57,8 +55,6 @@ export class AuthController {
                 email,
                 password,
             });
-
-            // console.log("createdUser ---- ", createdUser);
 
             // res.status(201).send();
 

@@ -18,30 +18,20 @@ export class UserService {
     }
 
     async createUser({ firstName, lastName, password, email }: UserData) {
-        console.log("data", {
-            firstName,
-            lastName,
-            password,
-            email,
-        });
-
         // Find any user is already register with the email id or not
 
         const findUser = await this.userRepositery.findOne({
             where: { email: email },
         });
 
-        console.log("this is findUser ", findUser);
-
         if (findUser) {
             const error = createHttpError(400, "Email is Already exist");
             throw error;
         }
+
         // hashed the password
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-        console.log("hashedpassword : ", hashedPassword);
 
         // to store any user in our db , we need to use type orm repositery
 
@@ -57,7 +47,6 @@ export class UserService {
                 dob: "17 July 2024",
             });
 
-            console.log("user ----- ", user);
             return user;
         } catch (err) {
             console.log("err----", err);

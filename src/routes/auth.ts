@@ -22,7 +22,6 @@ authRouter.post(
     registerValidator,
 
     async (req: Request, res: Response, next: NextFunction) => {
-        console.log("Hit /register Route");
         await authController.register(req, res, next);
     },
 );

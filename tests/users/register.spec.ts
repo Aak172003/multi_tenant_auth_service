@@ -13,8 +13,6 @@ describe("Post auth/register", () => {
 
     beforeAll(async () => {
         connection = await AppDataSource.initialize();
-
-        console.log("connection inside before all ---- ", connection);
     });
 
     // before apply any test , first we need to clear the whole data
@@ -22,7 +20,6 @@ describe("Post auth/register", () => {
         // first drop the database
 
         await connection.dropDatabase();
-
         await connection.synchronize();
         // Database Truncate
         // await truncateTables(connection);
@@ -50,8 +47,6 @@ describe("Post auth/register", () => {
             const response = await request(app)
                 .post("/auth/register")
                 .send(userData);
-
-            console.log("this is response ----- ", response);
 
             // Assert -> matcher
             expect(response.statusCode).toBe(201);
@@ -99,8 +94,6 @@ describe("Post auth/register", () => {
             // return list of user
             const users = await userRepositery.find();
 
-            console.log("from register test -------- ", users);
-
             // This check either list have atleast one user which i am trying to find
             expect(users).toHaveLength(1);
             expect(users[0].firstName).toBe(userData.firstName);
@@ -120,15 +113,10 @@ describe("Post auth/register", () => {
                 password: "93104@Aak",
             };
 
-            console.log("userData ----- ", userData);
-
             // Act
             const response = await request(app)
                 .post("/auth/register")
                 .send(userData);
-
-            console.log("this is response --- ", response);
-            console.log("this is responseBody --- ", response.body);
 
             // Assert
             const userRepositery = connection.getRepository(User);
@@ -137,8 +125,6 @@ describe("Post auth/register", () => {
             const createdUser = await userRepositery.findOneBy({
                 email: userData.email,
             });
-
-            console.log("users from id test case -- ", createdUser);
 
             // Ensure the response contains the ID of the created user
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -162,8 +148,6 @@ describe("Post auth/register", () => {
 
             // return list of user
             const users = await userRepositery.find();
-
-            console.log("customer role ---- ", users);
 
             expect(users[0]).toHaveProperty("role");
             expect(users[0]).toHaveProperty("dob");
@@ -192,7 +176,6 @@ describe("Post auth/register", () => {
             // return list of user
             const users = await userRepositery.find();
 
-            console.log("from Should store the hashed password", users);
             expect(users[0].password).not.toBe(userData.password);
             expect(users[0].password).toHaveLength(60);
 
@@ -225,10 +208,6 @@ describe("Post auth/register", () => {
 
             // return list of user
             const users = await userRepositery.find();
-
-            console.log("Users fro eight test case ====== ", users);
-
-            console.log("Eight Test Response ------ ", response.statusCode);
             expect(response.statusCode).toBe(400);
             expect(users).toHaveLength(1);
         });
@@ -260,7 +239,6 @@ describe("Post auth/register", () => {
 
             // return list of user
             const users = await userRepositery.find();
-            console.log("saved user ----------- ", users);
 
             // Here make sure , if email is not revecive so no new user create in db
             expect(users).toHaveLength(0);

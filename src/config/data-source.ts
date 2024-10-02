@@ -3,15 +3,15 @@ import { DataSource } from "typeorm";
 import { User } from "../entity/User";
 import { Config } from ".";
 
-console.log("Config.DB_NAME from data-source ------ ", Config.DB_NAME);
-console.log(`For data-source ${Config.NODE_ENV} ENVIRONMENT`);
+// console.log("Config.DB_NAME from data-source ------ ", Config.DB_NAME);
+// console.log(`For data-source ${Config.NODE_ENV} ENVIRONMENT`);
 
-console.log("Config.DB_USERNAME from data source ---- ", Config.DB_USERNAME);
+// console.log("Config.DB_USERNAME from data source ---- ", Config.DB_USERNAME);
 
-console.log("Config.DB_USERNAME from data source ---- ", Config.DB_HOST);
-console.log("Config.DB_USERNAME from data source ---- ", Config.DB_USERNAME);
-console.log("Config.DB_USERNAME from data source ---- ", Config.DB_PORT);
-console.log("Config.DB_USERNAME from data source ---- ", Config.DB_PASSWORD);
+// console.log("Config.DB_USERNAME from data source ---- ", Config.DB_HOST);
+// console.log("Config.DB_USERNAME from data source ---- ", Config.DB_USERNAME);
+// console.log("Config.DB_USERNAME from data source ---- ", Config.DB_PORT);
+// console.log("Config.DB_USERNAME from data source ---- ", Config.DB_PASSWORD);
 
 export const AppDataSource = new DataSource({
     type: "postgres",
