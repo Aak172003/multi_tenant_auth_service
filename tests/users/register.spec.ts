@@ -235,5 +235,35 @@ describe("Post auth/register", () => {
     });
 
     // sad path
-    describe("Fields are missing", () => {});
+    describe("Fields are missing", () => {
+        // First Case
+        test("should reture 400 status code  if email field is missing  ", async () => {
+            // AAA -> define below
+
+            // Arrange,
+            const userData = {
+                firstName: "Aakash",
+                lastName: "Prajapati",
+                email: "",
+                password: "secret",
+            };
+
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            console.log("this is response from sad first case ", response.body);
+            expect(response.statusCode).toBe(400);
+
+            const userRepositery = connection.getRepository(User);
+
+            // return list of user
+            const users = await userRepositery.find();
+            console.log("saved user ----------- ", users);
+
+            // Here make sure , if email is not revecive so no new user create in db
+            expect(users).toHaveLength(0);
+        });
+    });
 });

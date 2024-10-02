@@ -2,6 +2,8 @@ import { NextFunction, Response } from "express";
 import { RegisterUserInterface } from "../types";
 import { UserService } from "../services/UserService";
 import { Logger } from "winston";
+import createHttpError from "http-errors";
+import { validationResult } from "express-validator";
 
 export class AuthController {
     // create userService variable of UserServicetype
@@ -29,7 +31,19 @@ export class AuthController {
         next: NextFunction,
     ) {
         const { firstName, lastName, email, password } = req.body;
+        // if (!email) {
+        //     const error = createHttpError(400, "Email is Required!");
+        //     next(error);
+        //     return;
+        // }
 
+        // Validation
+        const result = validationResult(req);
+        console.log("this is result --------- ", result);
+
+        if (!result.isEmpty()) {
+            return res.status(400).json({ errors: result.array() });
+        }
         this.logger.debug("New request to register a user ", {
             firstName,
             lastName,
