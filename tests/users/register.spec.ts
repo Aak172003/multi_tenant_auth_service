@@ -58,7 +58,6 @@ describe("Post auth/register", () => {
         });
 
         // Second Test
-
         it("should return valid json response", async () => {
             // AAA -> define below
 
@@ -82,7 +81,6 @@ describe("Post auth/register", () => {
         });
 
         // Third Test - while entring any user data into database
-
         test("should persist the user in the database", async () => {
             // Arrange,
             const userData = {
@@ -108,9 +106,11 @@ describe("Post auth/register", () => {
             expect(users[0].firstName).toBe(userData.firstName);
         });
 
+        // Forth Test
         // this todo means we can implement this test in future
         it.todo("should return an id of created user");
 
+        // Fifth Test
         test("should return an id ", async () => {
             // Arrange,
             const userData = {
@@ -145,6 +145,7 @@ describe("Post auth/register", () => {
             expect(response.body.id).toBe(createdUser?.id);
         });
 
+        // Sixth Test
         it("should assign a customer role", async () => {
             // Arrange,
             const userData = {
@@ -171,7 +172,9 @@ describe("Post auth/register", () => {
             expect(users[0].dob).toBe(CUSTOM_DOB);
         });
 
+        // Seventh Test
         test("Should store the hashed password", async () => {
+            // Arrange,
             const userData = {
                 firstName: "Aakash",
                 lastName: "Prajapati",
@@ -194,6 +197,40 @@ describe("Post auth/register", () => {
             expect(users[0].password).toHaveLength(60);
 
             expect(users[0].password).toMatch(/^\$2b\$\d+\$/);
+        });
+
+        // Eigth Test
+        test("should return 400 status code if email already exist", async () => {
+            // Arrange,
+            const userData = {
+                firstName: "Aakash",
+                lastName: "Prajapati",
+                email: "an@gmail.com",
+                password: "Aak@123",
+                role: Roles.CUSTOMER,
+                dob: "17 July 2024",
+            };
+
+            // Assert
+
+            const userRepositery = connection.getRepository(User);
+            const user = await userRepositery.save(userData);
+
+            console.log("saved user ----------- ", user);
+
+            // Assert
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            // return list of user
+            const users = await userRepositery.find();
+
+            console.log("Users fro eight test case ====== ", users);
+
+            console.log("Eight Test Response ------ ", response.statusCode);
+            expect(response.statusCode).toBe(400);
+            expect(users).toHaveLength(1);
         });
     });
 

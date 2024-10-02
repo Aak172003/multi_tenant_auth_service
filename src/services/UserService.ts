@@ -25,9 +25,23 @@ export class UserService {
             email,
         });
 
+        // Find any user is already register with the email id or not
+
+        const findUser = await this.userRepositery.findOne({
+            where: { email: email },
+        });
+
+        console.log("this is findUser ", findUser);
+
+        if (findUser) {
+            const error = createHttpError(400, "Email is Already exist");
+            throw error;
+        }
         // hashed the password
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        console.log("hashedpassword : ", hashedPassword);
 
         // to store any user in our db , we need to use type orm repositery
 
