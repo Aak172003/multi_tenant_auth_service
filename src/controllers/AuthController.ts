@@ -3,6 +3,7 @@ import { RegisterUserInterface } from "../types";
 import { UserService } from "../services/UserService";
 import { Logger } from "winston";
 import { validationResult } from "express-validator";
+import { ResponseMessage } from "../config/responseMessage";
 
 export class AuthController {
     // create userService variable of UserServicetype
@@ -42,6 +43,8 @@ export class AuthController {
         if (!result.isEmpty()) {
             return res.status(400).json({ errors: result.array() });
         }
+
+        // This is logger
         this.logger.debug("New request to register a user ", {
             firstName,
             lastName,
@@ -58,7 +61,7 @@ export class AuthController {
 
             // res.status(201).send();
 
-            this.logger.info("User has been registered ", {
+            this.logger.info(ResponseMessage.USER_REGISTERED_SUCCESSFULLY, {
                 id: createdUser.id,
             });
             // res.status(201).json({ createdUser });

@@ -40,7 +40,7 @@ describe("Post auth/register", () => {
                 firstName: "Aakash",
                 lastName: "A",
                 email: "aakashabc@gmail.com",
-                password: "secret",
+                password: "123456789",
             };
 
             // Act
@@ -61,7 +61,7 @@ describe("Post auth/register", () => {
                 firstName: "Aakash",
                 lastName: "A",
                 email: "aakashabc@gmail.com",
-                password: "secret",
+                password: "123456789",
             };
 
             // Act
@@ -82,7 +82,7 @@ describe("Post auth/register", () => {
                 firstName: "Aakash",
                 lastName: "Prajapati",
                 email: "aakash123@gmail.com",
-                password: "93104@Aak",
+                password: "123456789",
             };
 
             // Act
@@ -110,7 +110,7 @@ describe("Post auth/register", () => {
                 firstName: "Aakash",
                 lastName: "Prajapati",
                 email: "aakash123@gmail.com",
-                password: "93104@Aak",
+                password: "123456789",
             };
 
             // Act
@@ -119,8 +119,17 @@ describe("Post auth/register", () => {
                 .send(userData);
 
             // Assert
+
+            console.log(
+                " response from fifth test -------------",
+                response.body,
+            );
+            expect(response.body).toHaveProperty("id");
             const userRepositery = connection.getRepository(User);
 
+            const users = await userRepositery.find();
+
+            console.log("this users from fifth test ------- ", users);
             // return list of user
             const createdUser = await userRepositery.findOneBy({
                 email: userData.email,
@@ -129,6 +138,9 @@ describe("Post auth/register", () => {
             // Ensure the response contains the ID of the created user
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(response.body.id).toBe(createdUser?.id);
+            expect((response.body as Record<string, string>).id).toBe(
+                users[0].id,
+            );
         });
 
         // Sixth Test
@@ -138,7 +150,7 @@ describe("Post auth/register", () => {
                 firstName: "Aakash",
                 lastName: "Prajapati",
                 email: "aakash123@gmail.com",
-                password: "93104@Aak",
+                password: "123456789",
             };
 
             // Act
@@ -163,7 +175,7 @@ describe("Post auth/register", () => {
                 firstName: "Aakash",
                 lastName: "Prajapati",
                 email: "aakash123@gmail.com",
-                password: "Aak@123",
+                password: "123456789",
             };
 
             // Act
@@ -189,7 +201,7 @@ describe("Post auth/register", () => {
                 firstName: "Aakash",
                 lastName: "Prajapati",
                 email: "an@gmail.com",
-                password: "Aak@123",
+                password: "123456789",
                 role: Roles.CUSTOMER,
                 dob: "17 July 2024",
             };
@@ -224,7 +236,7 @@ describe("Post auth/register", () => {
                 firstName: "Aakash",
                 lastName: "Prajapati",
                 email: "",
-                password: "secret",
+                password: "123456789",
             };
 
             // Act
@@ -243,5 +255,115 @@ describe("Post auth/register", () => {
             // Here make sure , if email is not revecive so no new user create in db
             expect(users).toHaveLength(0);
         });
+
+        test("should return 400 status if firstname is missing", async () => {
+            const userData = {
+                firstName: "",
+                lastName: "Prajapati",
+                email: "abc@gmail.com",
+                password: "123456789",
+            };
+
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            console.log("responde ---------- ", response.body);
+            expect(response.statusCode).toBe(400);
+
+            const userRepositery = connection.getRepository(User);
+
+            // return list of user
+            const users = await userRepositery.find();
+
+            // Here make sure , if email is not revecive so no new user create in db
+            expect(users).toHaveLength(0);
+        });
+
+        it("should return 400 status if lastname is missing", async () => {
+            const userData = {
+                firstName: "Aakash",
+                lastName: "",
+                email: "abc@gmail.com",
+                password: "123456789",
+            };
+
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            console.log("response /////////////////", response.body);
+            expect(response.statusCode).toBe(400);
+
+            const userRepositery = connection.getRepository(User);
+
+            // return list of user
+            const users = await userRepositery.find();
+
+            // Here make sure , if email is not revecive so no new user create in db
+            expect(users).toHaveLength(0);
+        });
+
+        it("should return 400 status if password is missing", async () => {
+            // Arrange
+            const userData = {
+                firstName: "Aakash",
+                lastName: "Prajapati",
+                email: "abc@gmail.com",
+                password: "",
+            };
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            console.log("respons eeeeeeeeeeeeeeeeeeeeeeeee ", response.body);
+            // Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+
+        it.todo(
+            "should return message (Password is too short) if password length less than 8 ",
+        );
+
+        it.todo(
+            "should return message (Password is too long) if password length greater than 10 ",
+        );
+    });
+
+    describe("Fields are not in proper Format ", () => {
+        // First Test
+        it("should trim email field", async () => {
+            // Arrange,
+            const userData = {
+                firstName: "Aakash",
+                lastName: "Prajapati",
+                email: "          akash@gmail.com                           ",
+                password: "123456789",
+            };
+
+            // Act
+            await request(app).post("/auth/register").send(userData);
+
+            const userRepositery = connection.getRepository(User);
+            const users = await userRepositery.find();
+
+            const user = users[0];
+            expect(user.email).toBe("akash@gmail.com");
+        });
+
+        // Second Test
+
+        test.todo(
+            "should return 400 status code if email is not as valid email",
+        );
+        test.todo(
+            "should return 400 status code if password length is less than 8 characters",
+        );
     });
 });
