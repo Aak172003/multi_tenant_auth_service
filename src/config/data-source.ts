@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { User } from "../entity/User";
 import { Config } from ".";
+import { RefreshToken } from "../entity/RefreshToken";
 
 // console.log("Config.DB_NAME from data-source ------ ", Config.DB_NAME);
 // console.log(`For data-source ${Config.NODE_ENV} ENVIRONMENT`);
@@ -33,7 +34,7 @@ export const AppDataSource = new DataSource({
 
     synchronize: false,
     logging: false,
-    entities: [User],
+    entities: [User, RefreshToken],
     migrations: [],
     subscribers: [],
 });

@@ -5,6 +5,8 @@ import { AppDataSource } from "../config/data-source";
 import { User } from "../entity/User";
 import logger from "../config/logger";
 import registerValidator from "../validators/register-validator";
+import { TokenService } from "../services/TokenService";
+import { RefreshToken } from "../entity/RefreshToken";
 
 const authRouter = express.Router();
 
@@ -13,7 +15,11 @@ const userRepositery = AppDataSource.getRepository(User);
 // Creating an object or instance
 // here we need to pass userRepositery because userservice require userRepositery, to perform save operation
 const userService = new UserService(userRepositery);
-const authController = new AuthController(userService, logger);
+const tokenRepositery = AppDataSource.getRepository(RefreshToken);
+
+const tokenService = new TokenService(tokenRepositery);
+
+const authController = new AuthController(userService, logger, tokenService);
 
 authRouter.post(
     "/register",

@@ -7,6 +7,7 @@ import { AppDataSource } from "../../src/config/data-source";
 import { User } from "../../src/entity/User";
 import { CUSTOM_DOB, Roles } from "../../src/constants";
 import { isJWT } from "../utils";
+import { RefreshToken } from "../../src/entity/RefreshToken";
 // import { response } from "express";
 
 describe("Post auth/register", () => {
@@ -264,6 +265,40 @@ describe("Post auth/register", () => {
 
             expect(isJWT(accessToken as string)).toBeTruthy();
             expect(isJWT(refreshToken as string)).toBeTruthy();
+        });
+
+        // Tenth
+        it("store the refresh token in the database ", async () => {
+            // Arrange
+            const userData = {
+                firstName: "Aakash",
+                lastName: "Prajapati",
+                email: "an@gmail.com",
+                password: "123456789",
+                role: Roles.CUSTOMER,
+                dob: "17 July 2024",
+            };
+
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            // Accert
+            const refrestTokenRepo = connection.getRepository(RefreshToken);
+
+            const refreshToken = await refrestTokenRepo.find();
+
+            // refresh token has foreign key , so check that is refreshtoken is created for the same user
+            const token = await refrestTokenRepo
+                .createQueryBuilder("refreshToken")
+                .where("refreshToken.userId= :userId", {
+                    userId: (response.body as Record<string, string>).id,
+                })
+                .getMany();
+
+            expect(token).toHaveLength(1);
+            expect(refreshToken).toHaveLength(1);
         });
     });
 
