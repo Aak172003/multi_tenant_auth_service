@@ -9,8 +9,16 @@ import path from "path";
 // take dynamic value form env file according to environment
 config({ path: path.join(__dirname, `../../.env.${process.env.NODE_ENV}`) });
 
-const { PORT, NODE_ENV, DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_NAME } =
-    process.env;
+const {
+    PORT,
+    NODE_ENV,
+    DB_HOST,
+    DB_PORT,
+    DB_USERNAME,
+    DB_PASSWORD,
+    DB_NAME,
+    REFRESH_SECRET_KEY,
+} = process.env;
 
 // console.log("DB_HOST - config index  ", DB_HOST);
 // console.log("DB_PORT - config index ", DB_PORT);
@@ -27,4 +35,5 @@ export const Config = {
     DB_USERNAME,
     DB_PASSWORD,
     DB_NAME,
+    REFRESH_SECRET_KEY,
 };

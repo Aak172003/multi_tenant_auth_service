@@ -6,6 +6,7 @@ import { AppDataSource } from "../../src/config/data-source";
 
 import { User } from "../../src/entity/User";
 import { CUSTOM_DOB, Roles } from "../../src/constants";
+import { isJWT } from "../utils";
 // import { response } from "express";
 
 describe("Post auth/register", () => {
@@ -119,17 +120,11 @@ describe("Post auth/register", () => {
                 .send(userData);
 
             // Assert
-
-            console.log(
-                " response from fifth test -------------",
-                response.body,
-            );
             expect(response.body).toHaveProperty("id");
             const userRepositery = connection.getRepository(User);
 
             const users = await userRepositery.find();
 
-            console.log("this users from fifth test ------- ", users);
             // return list of user
             const createdUser = await userRepositery.findOneBy({
                 email: userData.email,
@@ -209,9 +204,7 @@ describe("Post auth/register", () => {
             // Assert
 
             const userRepositery = connection.getRepository(User);
-            const user = await userRepositery.save(userData);
-
-            console.log("saved user ----------- ", user);
+            await userRepositery.save(userData);
 
             // Assert
             const response = await request(app)
@@ -222,6 +215,55 @@ describe("Post auth/register", () => {
             const users = await userRepositery.find();
             expect(response.statusCode).toBe(400);
             expect(users).toHaveLength(1);
+        });
+
+        // ---------------------------------------- JWT Token TestCases -------------------------------------------
+
+        // Ninth Test
+
+        // Also make sure , always set tokens inside cookies , not in localhoast , because
+        test("should return the acess token and refresh token inside a cookie ", async () => {
+            // Arrange
+            const userData = {
+                firstName: "Aakash",
+                lastName: "Prajapati",
+                email: "an@gmail.com",
+                password: "123456789",
+                role: Roles.CUSTOMER,
+                dob: "17 July 2024",
+            };
+
+            // Act
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
+
+            // Assert
+
+            let accessToken: string | undefined;
+            let refreshToken: string | undefined;
+
+            const cookies = response.headers["set-cookie"] || [];
+
+            console.log("this is cookies --------- from 9th test", cookies);
+
+            // Loop through cookies and find accessToken and refreshToken
+
+            // Using forEach to safely type each cookie string
+            for (const cookie of cookies) {
+                if (cookie.startsWith("accessToken=")) {
+                    accessToken = cookie.split("=")[1]?.split(";")[0];
+                }
+                if (cookie.startsWith("refreshToken=")) {
+                    refreshToken = cookie.split("=")[1]?.split(";")[0];
+                }
+            }
+
+            expect(accessToken).not.toBeNull();
+            expect(refreshToken).not.toBeNull();
+
+            expect(isJWT(accessToken as string)).toBeTruthy();
+            expect(isJWT(refreshToken as string)).toBeTruthy();
         });
     });
 
@@ -244,7 +286,6 @@ describe("Post auth/register", () => {
                 .post("/auth/register")
                 .send(userData);
 
-            console.log("this is response from sad first case ", response.body);
             expect(response.statusCode).toBe(400);
 
             const userRepositery = connection.getRepository(User);
@@ -269,7 +310,6 @@ describe("Post auth/register", () => {
                 .post("/auth/register")
                 .send(userData);
 
-            console.log("responde ---------- ", response.body);
             expect(response.statusCode).toBe(400);
 
             const userRepositery = connection.getRepository(User);
@@ -294,7 +334,6 @@ describe("Post auth/register", () => {
                 .post("/auth/register")
                 .send(userData);
 
-            console.log("response /////////////////", response.body);
             expect(response.statusCode).toBe(400);
 
             const userRepositery = connection.getRepository(User);
@@ -319,7 +358,6 @@ describe("Post auth/register", () => {
                 .post("/auth/register")
                 .send(userData);
 
-            console.log("respons eeeeeeeeeeeeeeeeeeeeeeeee ", response.body);
             // Assert
             expect(response.statusCode).toBe(400);
             const userRepository = connection.getRepository(User);
@@ -338,12 +376,13 @@ describe("Post auth/register", () => {
 
     describe("Fields are not in proper Format ", () => {
         // First Test
+
         it("should trim email field", async () => {
             // Arrange,
             const userData = {
                 firstName: "Aakash",
                 lastName: "Prajapati",
-                email: "          akash@gmail.com                           ",
+                email: "          akash@gmail.com           ",
                 password: "123456789",
             };
 
