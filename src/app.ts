@@ -26,7 +26,7 @@ app.get("/error", async (req, res, next) => {
     return next(err);
 });
 
-// This is Api EndPoints fpr User Register
+// This is Api EndPoints for User Register
 app.use("/auth", authRouter);
 
 // Global Middleware -> which automaticcaly execute whenever we hit any api endpoint

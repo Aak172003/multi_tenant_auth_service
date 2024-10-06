@@ -27,12 +27,9 @@ export const AppDataSource = new DataSource({
     // This synchronize make sure for developement and testing true ,
     // but fot profuction case make sure this value is false
     // Don't use the this in production
-
     // synchronize: true,
 
-    // synchronize: Config.NODE_ENV === "test" || Config.NODE_ENV === "dev", // true
-
-    synchronize: false,
+    synchronize: true,
     logging: false,
     entities: [User, RefreshToken],
     migrations: [],

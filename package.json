@@ -4,7 +4,7 @@
     "description": "A user management micro_service",
     "main": "index.js",
     "scripts": {
-        "dev": "cross-env NODE_ENV=test nodemon src/server.ts --legacy-watch ",
+        "dev": "cross-env NODE_ENV=dev nodemon src/server.ts --legacy-watch ",
         "format:check": "prettier . --check",
         "format:fix": "prettier . --write",
         "lint": "eslint .",

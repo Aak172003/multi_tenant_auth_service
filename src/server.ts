@@ -1,8 +1,9 @@
 import app from "./app";
 import { Config } from "./config";
+import { AppDataSource } from "./config/data-source";
 import logger from "./config/logger";
 
-const startServer = () => {
+const startServer = async () => {
     const PORT = Config.PORT;
     const ENVIRONMENT = Config.NODE_ENV;
     try {
@@ -15,6 +16,11 @@ const startServer = () => {
 
         // throw err;
 
+        // we need to create connection with PostgresSQL Db
+
+        await AppDataSource.initialize();
+
+        logger.info("Datbase connect Successfully");
         app.listen(PORT, () => {
             console.log(
                 `Welcome to Port No.${PORT}, My Current Env is ${ENVIRONMENT}`,
@@ -45,4 +51,4 @@ const startServer = () => {
     }
 };
 
-startServer();
+void startServer();
