@@ -209,7 +209,7 @@ export class AuthController {
 
             this.logger.info("User has been logged in", { loggedInUser: user });
             this.logger.info("User has been logged in", { id: user.id });
-            res.status(201).json({ id: user.id, user: user });
+            res.status(200).json({ id: user.id, user: user });
         } catch (error) {
             console.log(error);
             next(error);
