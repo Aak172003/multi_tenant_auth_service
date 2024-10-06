@@ -6,8 +6,10 @@ import { AppDataSource } from "../../src/config/data-source";
 
 import { User } from "../../src/entity/User";
 import { CUSTOM_DOB, Roles } from "../../src/constants";
-import { isJWT } from "../utils";
+
 import { RefreshToken } from "../../src/entity/RefreshToken";
+import { isJWT } from "../../src/utils";
+
 // import { response } from "express";
 
 describe("Post auth/register", () => {
