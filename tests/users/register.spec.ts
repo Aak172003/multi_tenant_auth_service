@@ -240,16 +240,12 @@ describe("Post auth/register", () => {
                 .send(userData);
 
             // Assert
-
             let accessToken: string | undefined;
             let refreshToken: string | undefined;
 
             const cookies = response.headers["set-cookie"] || [];
 
-            console.log("this is cookies --------- from 9th test", cookies);
-
             // Loop through cookies and find accessToken and refreshToken
-
             // Using forEach to safely type each cookie string
             for (const cookie of cookies) {
                 if (cookie.startsWith("accessToken=")) {

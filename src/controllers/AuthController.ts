@@ -69,70 +69,17 @@ export class AuthController {
             });
             // res.status(201).json({ createdUser });
 
-            // Create sample token
-            // const accessToken =
-            //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
-            // need to generate cryptographic private key
-            // const privateKey = "private"
-
-            // let privateKey: Buffer;
-            // try {
-            //     privateKey = fs.readFileSync(
-            //         path.join(__dirname, "../../certs/private.pem"),
-            //     );
-            // } catch (err) {
-            //     const error = createHttpError(
-            //         500,
-            //         "Error while reading the private key",
-            //     );
-
-            //     next(error);
-            //     return;
-            // }
-
             const payload: JwtPayload = {
                 sub: String(createdUser.id),
                 role: createdUser.role,
             };
 
-            // Create accesstoken via RS256 Algotithm
-            // const accessToken = jwt.sign(payload, privateKey, {
-            //     algorithm: "RS256",
-            //     expiresIn: "1h",
-            //     issuer: "auth-service",
-            // });
-
-            // const tokenService = new TokenService();
-
             // Call the generateAccessToken method and get the token
             const accessToken = this.tokenService.generateAccessToken(payload);
 
-            // Log or use the token
-            console.log("Generated Access Token:", accessToken);
-            // Config.REFRESH_SECRET_KEY! means i am sure , that refreshToken never empty
-
             // Persist the refreshToken
-            // const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365; // Leap Year
-            // const refreshTokenRepositery =
-            //     AppDataSource.getRepository(RefreshToken);
-
-            // save generated refresh token into RefreshToken table
-
-            // const newRefreshToken = refreshTokenRepositery.save({
-            //     user: createdUser,
-            //     expiresAt: new Date(Date.now() + MS_IN_YEAR),
-            // });
-
             const newRefreshToken =
                 this.tokenService.persistRefreshToken(createdUser);
-
-            // const refreshToken = jwt.sign(payload, Config.REFRESH_SECRET_KEY!, {
-            //     algorithm: "HS256",
-            //     expiresIn: "1h",
-            //     issuer: "auth-service",
-            //     jwtid: String((await newRefreshToken).id),
-            // });
 
             const refreshToken = this.tokenService.generateRefreshToken({
                 ...payload,
@@ -143,7 +90,6 @@ export class AuthController {
                 domain: "localhost",
                 sameSite: "strict",
                 maxAge: 1000 * 60 * 60, // 1 hour
-
                 // httpOnly means , that can access only by our server not access by client side
                 httpOnly: true,
             });
@@ -152,8 +98,6 @@ export class AuthController {
                 domain: "localhost",
                 sameSite: "strict",
                 maxAge: 1000 * 60 * 60 * 24 * 365, // 1 Year
-
-                // httpOnly means , that can access only by our server not access by client side
                 httpOnly: true,
             });
 
