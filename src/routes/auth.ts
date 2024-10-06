@@ -7,6 +7,8 @@ import logger from "../config/logger";
 import registerValidator from "../validators/register-validator";
 import { TokenService } from "../services/TokenService";
 import { RefreshToken } from "../entity/RefreshToken";
+import loginValidator from "../validators/login-validator";
+import { CredentialService } from "../services/CredentialService";
 
 const authRouter = express.Router();
 
@@ -18,8 +20,14 @@ const userService = new UserService(userRepositery);
 const tokenRepositery = AppDataSource.getRepository(RefreshToken);
 
 const tokenService = new TokenService(tokenRepositery);
+const credentialService = new CredentialService();
 
-const authController = new AuthController(userService, logger, tokenService);
+const authController = new AuthController(
+    userService,
+    logger,
+    tokenService,
+    credentialService,
+);
 
 authRouter.post(
     "/register",
@@ -28,6 +36,17 @@ authRouter.post(
 
     async (req: Request, res: Response, next: NextFunction) => {
         await authController.register(req, res, next);
+    },
+);
+
+authRouter.post(
+    "/login",
+
+    // This if express validator middleware
+    loginValidator,
+
+    async (req: Request, res: Response, next: NextFunction) => {
+        await authController.login(req, res, next);
     },
 );
 

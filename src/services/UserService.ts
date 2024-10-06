@@ -57,4 +57,13 @@ export class UserService {
             throw error;
         }
     }
+
+    async findByEmail(email_id: string) {
+        const user = await this.userRepositery.findOne({
+            where: { email: email_id },
+        });
+
+        console.log("this is find user ------- ", user);
+        return user;
+    }
 }

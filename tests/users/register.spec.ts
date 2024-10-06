@@ -12,7 +12,7 @@ import { isJWT } from "../../src/utils";
 
 // import { response } from "express";
 
-describe("Post auth/register", () => {
+describe("Post /auth/register", () => {
     let connection: DataSource;
 
     beforeAll(async () => {
@@ -198,7 +198,7 @@ describe("Post auth/register", () => {
             const userData = {
                 firstName: "Aakash",
                 lastName: "Prajapati",
-                email: "an@gmail.com",
+                email: "ajay@gmail.com",
                 password: "123456789",
                 role: Roles.CUSTOMER,
                 dob: "17 July 2024",
