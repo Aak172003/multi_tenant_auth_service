@@ -66,4 +66,13 @@ export class UserService {
         console.log("this is find user ------- ", user);
         return user;
     }
+
+    async findById(user_id: number) {
+        const user = await this.userRepositery.findOne({
+            where: { id: user_id },
+        });
+
+        console.log("this is find user ------- ", user);
+        return user;
+    }
 }

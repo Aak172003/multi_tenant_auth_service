@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { User } from "../entity/User";
 import { Config } from ".";
+import { User } from "../entity/User";
 import { RefreshToken } from "../entity/RefreshToken";
 
 // console.log("Config.DB_NAME from data-source ------ ", Config.DB_NAME);

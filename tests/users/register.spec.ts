@@ -15,18 +15,32 @@ import { isJWT } from "../../src/utils";
 describe("Post /auth/register", () => {
     let connection: DataSource;
 
+    // create connection before execute test cases
     beforeAll(async () => {
         connection = await AppDataSource.initialize();
+        console.log("Database initialized", connection.isInitialized); // Ensure it's initialized
     });
 
     // before apply any test , first we need to clear the whole data
-    beforeEach(async () => {
-        // first drop the database
+    // beforeEach(async () => {
+    //     // first drop the database
+    //     await connection.dropDatabase();
+    //     await connection.synchronize();
 
-        await connection.dropDatabase();
-        await connection.synchronize();
-        // Database Truncate
-        // await truncateTables(connection);
+    //     // Database Truncate
+    //     // await truncateTables(connection);
+    // });
+
+    beforeEach(async () => {
+        try {
+            await connection.dropDatabase(); // Drop the database
+            // console.log("Database dropped successfully");
+
+            await connection.synchronize(); // Recreate the database schema
+            // console.log("Database synchronized successfully");
+        } catch (error) {
+            console.error("Error during beforeEach:", error);
+        }
     });
 
     afterAll(async () => {
@@ -42,8 +56,8 @@ describe("Post /auth/register", () => {
             // Arrange,
             const userData = {
                 firstName: "Aakash",
-                lastName: "A",
-                email: "aakashabc@gmail.com",
+                lastName: "Prajapati",
+                email: "aman@gmail.com",
                 password: "123456789",
             };
 
@@ -63,8 +77,8 @@ describe("Post /auth/register", () => {
             // Arrange,
             const userData = {
                 firstName: "Aakash",
-                lastName: "A",
-                email: "aakashabc@gmail.com",
+                lastName: "Prajapati",
+                email: "aman@gmail.com",
                 password: "123456789",
             };
 
@@ -85,13 +99,16 @@ describe("Post /auth/register", () => {
             const userData = {
                 firstName: "Aakash",
                 lastName: "Prajapati",
-                email: "aakash123@gmail.com",
+                email: "aman@gmail.com",
                 password: "123456789",
             };
 
             // Act
-            await request(app).post("/auth/register").send(userData);
+            const response = await request(app)
+                .post("/auth/register")
+                .send(userData);
 
+            console.log("third test response ------- ", response.body);
             // Assert
             const userRepositery = connection.getRepository(User);
 
@@ -113,7 +130,7 @@ describe("Post /auth/register", () => {
             const userData = {
                 firstName: "Aakash",
                 lastName: "Prajapati",
-                email: "aakash123@gmail.com",
+                email: "aman@gmail.com",
                 password: "123456789",
             };
 
@@ -123,10 +140,11 @@ describe("Post /auth/register", () => {
                 .send(userData);
 
             // Assert
+            // first check request.body have id field or not
             expect(response.body).toHaveProperty("id");
             const userRepositery = connection.getRepository(User);
 
-            const users = await userRepositery.find();
+            // const users = await userRepositery.find();
 
             // return list of user
             const createdUser = await userRepositery.findOneBy({
@@ -136,9 +154,9 @@ describe("Post /auth/register", () => {
             // Ensure the response contains the ID of the created user
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(response.body.id).toBe(createdUser?.id);
-            expect((response.body as Record<string, string>).id).toBe(
-                users[0].id,
-            );
+            // expect((response.body as Record<string, string>).id).toBe(
+            //     users[0].id,
+            // );
         });
 
         // Sixth Test
@@ -147,7 +165,7 @@ describe("Post /auth/register", () => {
             const userData = {
                 firstName: "Aakash",
                 lastName: "Prajapati",
-                email: "aakash123@gmail.com",
+                email: "aman@gmail.com",
                 password: "123456789",
             };
 
@@ -172,7 +190,7 @@ describe("Post /auth/register", () => {
             const userData = {
                 firstName: "Aakash",
                 lastName: "Prajapati",
-                email: "aakash123@gmail.com",
+                email: "aman@gmail.com",
                 password: "123456789",
             };
 
@@ -198,7 +216,7 @@ describe("Post /auth/register", () => {
             const userData = {
                 firstName: "Aakash",
                 lastName: "Prajapati",
-                email: "ajay@gmail.com",
+                email: "aman@gmail.com",
                 password: "123456789",
                 role: Roles.CUSTOMER,
                 dob: "17 July 2024",
@@ -213,6 +231,8 @@ describe("Post /auth/register", () => {
             const response = await request(app)
                 .post("/auth/register")
                 .send(userData);
+
+            console.log("response from eight tests --------- ", response.body);
 
             // return list of user
             const users = await userRepositery.find();
@@ -230,7 +250,7 @@ describe("Post /auth/register", () => {
             const userData = {
                 firstName: "Aakash",
                 lastName: "Prajapati",
-                email: "an@gmail.com",
+                email: "aman@gmail.com",
                 password: "123456789",
                 role: Roles.CUSTOMER,
                 dob: "17 July 2024",
@@ -271,7 +291,7 @@ describe("Post /auth/register", () => {
             const userData = {
                 firstName: "Aakash",
                 lastName: "Prajapati",
-                email: "an@gmail.com",
+                email: "aman@gmail.com",
                 password: "123456789",
                 role: Roles.CUSTOMER,
                 dob: "17 July 2024",
@@ -334,7 +354,7 @@ describe("Post /auth/register", () => {
             const userData = {
                 firstName: "",
                 lastName: "Prajapati",
-                email: "abc@gmail.com",
+                email: "aman@gmail.com",
                 password: "123456789",
             };
 
@@ -358,7 +378,7 @@ describe("Post /auth/register", () => {
             const userData = {
                 firstName: "Aakash",
                 lastName: "",
-                email: "abc@gmail.com",
+                email: "aman@gmail.com",
                 password: "123456789",
             };
 
@@ -383,7 +403,7 @@ describe("Post /auth/register", () => {
             const userData = {
                 firstName: "Aakash",
                 lastName: "Prajapati",
-                email: "abc@gmail.com",
+                email: "aman@gmail.com",
                 password: "",
             };
             // Act
@@ -415,7 +435,7 @@ describe("Post /auth/register", () => {
             const userData = {
                 firstName: "Aakash",
                 lastName: "Prajapati",
-                email: "          akash@gmail.com           ",
+                email: "          aman@gmail.com          ",
                 password: "123456789",
             };
 
@@ -426,7 +446,7 @@ describe("Post /auth/register", () => {
             const users = await userRepositery.find();
 
             const user = users[0];
-            expect(user.email).toBe("akash@gmail.com");
+            expect(user.email).toBe("aman@gmail.com");
         });
 
         // Second Test

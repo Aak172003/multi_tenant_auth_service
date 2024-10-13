@@ -7,8 +7,11 @@ import logger from "../config/logger";
 import registerValidator from "../validators/register-validator";
 import { TokenService } from "../services/TokenService";
 import { RefreshToken } from "../entity/RefreshToken";
-import loginValidator from "../validators/login-validator";
+// import loginValidator from "../validators/login-validator";
 import { CredentialService } from "../services/CredentialService";
+import loginValidator from "../validators/login-validator";
+import authenticate from "../middlewares/authenticate";
+import { AuthRequest } from "../types";
 
 const authRouter = express.Router();
 
@@ -49,5 +52,10 @@ authRouter.post(
         await authController.login(req, res, next);
     },
 );
+
+// protected Route
+authRouter.get("/self", authenticate, async (req: Request, res: Response) => {
+    await authController.self(req as AuthRequest, res);
+});
 
 export default authRouter;

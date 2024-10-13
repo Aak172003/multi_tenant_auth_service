@@ -1,13 +1,14 @@
 import { CredentialService } from "./../services/CredentialService";
 import { TokenService } from "../services/TokenService";
 import { NextFunction, Response } from "express";
-import { RegisterUserInterface } from "../types";
+import { AuthRequest, RegisterUserInterface } from "../types";
 import { UserService } from "../services/UserService";
 import { Logger } from "winston";
 import { validationResult } from "express-validator";
 import { ResponseMessage } from "../config/responseMessage";
 import { JwtPayload } from "jsonwebtoken";
 import createHttpError from "http-errors";
+// import createHttpError from "http-errors";
 
 export class AuthController {
     // create userService variable of UserServicetype
@@ -106,7 +107,6 @@ export class AuthController {
 
             res.status(201).json({ id: createdUser.id });
         } catch (error) {
-            console.log(error);
             next(error);
             return;
         }
@@ -117,34 +117,30 @@ export class AuthController {
     async login(req: RegisterUserInterface, res: Response, next: NextFunction) {
         const { email, password } = req.body;
 
-        // Validation
+        console.log("email, password  : : ", email, password);
+        //     // Validation
         const result = validationResult(req);
 
         if (!result.isEmpty()) {
             return res.status(400).json({ errors: result.array() });
         }
 
-        // This is logger
-        this.logger.debug("New request to Login a user ", {
-            email,
-            password: "*****",
-        });
-
-        console.log("password : ", password);
-        // check if provided email is exist in our db or not
-        // if exist , then compare given password with password is stored in db correcponding to that email id
-        // Generate Token
-        // Add tokens into cookies
-        // return the response (id)
+        //     // This is logger
+        //     this.logger.debug("New request to Login a user ", {
+        //         email,
+        //         password: "*****",
+        //     });
+        //     // check if provided email is exist in our db or not
+        //     // if exist , then compare given password with password is stored in db correcponding to that email id
+        //     // Generate Token
+        //     // Add tokens into cookies
+        //     // return the response (id)
         try {
             const user = await this.userService.findByEmail(email);
 
-            console.log("User found ------------ ", user);
+            console.log("this is user ---------- ", user);
             if (!user) {
-                const error = createHttpError(
-                    400,
-                    "Email or password does not match",
-                );
+                const error = createHttpError(400, "Email does not match");
 
                 next(error);
                 return;
@@ -155,36 +151,29 @@ export class AuthController {
                 user.password,
             );
 
-            console.log("is match or not --------- ", passwordmatch);
-
             if (!passwordmatch) {
-                const error = createHttpError(
-                    400,
-                    "Email or password does not match",
-                );
+                const error = createHttpError(400, "password does not match");
 
                 next(error);
                 return;
             }
 
-            // res.status(201).send();
+            //         // res.status(201).send();
 
             this.logger.info(ResponseMessage.USER_LOGIN_SUCCESSFULLY, {
                 id: user.id,
             });
-            // res.status(201).json({ createdUser });
+            //         // res.status(201).json({ createdUser });
 
             const payload: JwtPayload = {
                 sub: String(user.id),
                 role: user.role,
             };
 
-            console.log("this is payLoad ------- ", payload);
-
-            // Call the generateAccessToken method and get the token
+            //         // Call the generateAccessToken method and get the token
             const accessToken = this.tokenService.generateAccessToken(payload);
 
-            // Persist the refreshToken
+            //         // Persist the refreshToken
             const newRefreshToken = this.tokenService.persistRefreshToken(user);
 
             const refreshToken = this.tokenService.generateRefreshToken({
@@ -209,11 +198,21 @@ export class AuthController {
 
             this.logger.info("User has been logged in", { loggedInUser: user });
             this.logger.info("User has been logged in", { id: user.id });
-            res.status(200).json({ id: user.id, user: user });
+            res.status(201).json({ id: user.id, user: user });
         } catch (error) {
-            console.log(error);
             next(error);
             return;
         }
+    }
+
+    async self(req: AuthRequest, res: Response) {
+        // Token Extract
+
+        console.log("request auth id ============ ", req.auth);
+
+        const user = await this.userService.findById(Number(req.auth.sub));
+
+        console.log("this is user via finfbyId ---------- ", user);
+        res.json({ ...user, password: undefined });
     }
 }

@@ -18,6 +18,7 @@ const {
     DB_PASSWORD,
     DB_NAME,
     REFRESH_SECRET_KEY,
+    JWKS_URI,
 } = process.env;
 
 // console.log("DB_HOST - config index  ", DB_HOST);
@@ -36,4 +37,5 @@ export const Config = {
     DB_PASSWORD,
     DB_NAME,
     REFRESH_SECRET_KEY,
+    JWKS_URI,
 };

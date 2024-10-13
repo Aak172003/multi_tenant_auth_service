@@ -7,11 +7,13 @@ import express, { Request, Response, NextFunction } from "express";
 import logger from "./config/logger";
 import createHttpError, { HttpError } from "http-errors";
 import authRouter from "./routes/auth";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 // By default express json middleware pareser is not enabled , so we need to enable manually
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
     res.status(200).json({
