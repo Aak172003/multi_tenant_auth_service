@@ -215,4 +215,69 @@ export class AuthController {
         console.log("this is user via finfbyId ---------- ", user);
         res.json({ ...user, password: undefined });
     }
+
+    async refresh(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            console.log("-----------------------");
+
+            // Prepare payload for accessToken
+            const payload: JwtPayload = {
+                sub: req.auth.sub,
+                role: req.auth.role,
+            };
+
+            console.log("payload -------------- ", payload);
+
+            // Call the generateAccessToken method and get the token
+            const accessToken = this.tokenService.generateAccessToken(payload);
+
+            // find user , because there is relation between refreshToken and user table
+            const user = await this.userService.findById(Number(req.auth.sub));
+
+            if (!user) {
+                const error = createHttpError(
+                    401,
+                    "User with the token couldn't find",
+                );
+
+                next(error);
+                return;
+            }
+            console.log(
+                "this is user ---- for this i perform token rotation --------- ",
+                user,
+            );
+
+            // Persist the refreshToken
+            const newRefreshToken = this.tokenService.persistRefreshToken(user);
+
+            await this.tokenService.deleteRefreshToken(Number(req.auth?.id));
+
+            const refreshToken = this.tokenService.generateRefreshToken({
+                ...payload,
+                id: String((await newRefreshToken).id),
+            });
+
+            res.cookie("accessToken", accessToken, {
+                domain: "localhost",
+                sameSite: "strict",
+                maxAge: 1000 * 60 * 60, // 1 hour
+                // httpOnly means , that can access only by our server not access by client side
+                httpOnly: true,
+            });
+
+            res.cookie("refreshToken", refreshToken, {
+                domain: "localhost",
+                sameSite: "strict",
+                maxAge: 1000 * 60 * 60 * 24 * 365, // 1 Year
+                httpOnly: true,
+            });
+
+            res.json({ id: user.id });
+        } catch (error) {
+            console.log(error);
+            next(error);
+            return;
+        }
+    }
 }

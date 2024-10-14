@@ -58,4 +58,17 @@ export class TokenService {
 
         return newRefreshToken;
     }
+
+    async deleteRefreshToken(tokenId: number) {
+        console.log("this is id --------- ", tokenId);
+        const deleteedRefreshToken = await this.refreshTokenRepositery.delete({
+            id: tokenId,
+        });
+
+        console.log(
+            "delete refresh token ----------------- ",
+            deleteedRefreshToken,
+        );
+        return deleteedRefreshToken;
+    }
 }
