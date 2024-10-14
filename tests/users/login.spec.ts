@@ -16,18 +16,6 @@ describe("POST /auth/login", () => {
     });
 
     beforeEach(async () => {
-        try {
-            await connection.dropDatabase(); // Drop the database
-            console.log("Database dropped successfully");
-
-            await connection.synchronize(); // Recreate the database schema
-            console.log("Database synchronized successfully");
-        } catch (error) {
-            console.error("Error during beforeEach:", error);
-        }
-    });
-
-    beforeEach(async () => {
         // first drop the database
         await connection?.dropDatabase();
         await connection?.synchronize();
@@ -39,8 +27,6 @@ describe("POST /auth/login", () => {
     afterAll(async () => {
         await connection?.destroy();
     });
-
-    // console.log("Database synchronized:", connection.isConnected);
 
     // Happy Path
     describe("Given all fields", () => {
@@ -56,46 +42,27 @@ describe("POST /auth/login", () => {
                 dob: "17 July 2024",
             };
 
-            // const registerResponse = await request(app)
-            //     .post("/auth/register")
-            //     .send(userData);
-
-            // console.log(
-            //     "third test response  form login test case ------- ",
-            //     registerResponse.body,
-            // );
-            // // Assert
-            // const userRepositery = connection.getRepository(User);
-
-            // return list of user
-            // const users = await userRepositery.find();
-
-            // console.log("this is user ====== ", users);
-
-            // This check either list have atleast one user which i am trying to find
-            // expect(users).toHaveLength(1);
-
-            // expect(users[0].firstName).toBe(userData.firstName);
-
             console.log(userData);
             const hashedPassword = await bcrypt.hash(userData.password, 10);
 
-            console.log("hashedPassword =============== ", hashedPassword);
-
-            const userRepository = connection.getRepository(User);
-
-            // console.log("Database synchronized:", connection.isConnected);
-
-            const savedUser = await userRepository.save({
+            const newData = {
                 ...userData,
                 password: hashedPassword,
-            });
-            console.log("savedUser ------ ", savedUser);
+            };
+            // const savedUser = await userRepository.save({
+            //     ...userData,
+            //     password: hashedPassword,
+            // });
+            // Act
+            const savedUser = await request(app)
+                .post("/auth/register")
+                .send(newData);
 
+            console.log("third test response ------- ", savedUser.body);
             // Act
             const response = await request(app)
                 .post("/auth/login")
-                .send({ email: userData.email, password: userData.password });
+                .send({ email: newData.email, password: newData.password });
 
             console.log(
                 "response body ---- from  login return ------ ",

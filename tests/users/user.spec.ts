@@ -11,7 +11,7 @@ describe("GET /auth/self", () => {
 
     // create connection before executing test cases
     beforeAll(async () => {
-        jwks = createJWKSMock("http://localhost:5581");
+        jwks = createJWKSMock("http://localhost:5501");
         connection = await AppDataSource.initialize();
     });
     // before apply any test , first we need to clear the whole data
@@ -130,6 +130,41 @@ describe("GET /auth/self", () => {
             expect(response.body as Record<string, string>).not.toHaveProperty(
                 "password",
             );
+        });
+
+        it("should return 401 status code if token does not exists", async () => {
+            // Register the user
+            const userData = {
+                firstName: "Abhay",
+                lastName: "Prajapati",
+                email: "us@gmail.com",
+                password: "Aak@93104",
+                role: Roles.CUSTOMER,
+                dob: "17 July 2024",
+            };
+            const userRepository = connection.getRepository(User);
+
+            const saveUserData = await userRepository.save(userData);
+
+            console.log(
+                "saveUserData user via verifying is token exist or not -------- ",
+                saveUserData,
+            );
+
+            // Generate Token
+
+            // Add Token to Cookie
+            const response = await request(app).get("/auth/self").send();
+
+            // Assert
+
+            console.log(
+                "response from fetching via verifying is token exist or not",
+                response.body,
+            );
+
+            // Assert
+            expect(response.statusCode).toBe(401);
         });
     });
 });

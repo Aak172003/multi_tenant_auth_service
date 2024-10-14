@@ -11,6 +11,8 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
+app.use(express.static("public"));
+
 // By default express json middleware pareser is not enabled , so we need to enable manually
 app.use(express.json());
 app.use(cookieParser());
@@ -37,7 +39,9 @@ app.use("/auth", authRouter);
 app.use((error: HttpError, req: Request, res: Response, next: NextFunction) => {
     logger.error(error.message);
 
-    const statusCode = error.statusCode || 500;
+    console.log("error : :: : : ", error);
+
+    const statusCode = error.statusCode || error.status || 500;
 
     res.status(statusCode).json({
         errors: [
