@@ -39,8 +39,6 @@ app.use("/auth", authRouter);
 app.use((error: HttpError, req: Request, res: Response, next: NextFunction) => {
     logger.error(error.message);
 
-    console.log("error : :: : : ", error);
-
     const statusCode = error.statusCode || error.status || 500;
 
     res.status(statusCode).json({
