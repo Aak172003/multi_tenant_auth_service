@@ -7,12 +7,13 @@ import logger from "../config/logger";
 import registerValidator from "../validators/register-validator";
 import { TokenService } from "../services/TokenService";
 import { RefreshToken } from "../entity/RefreshToken";
-// import loginValidator from "../validators/login-validator";
+
 import { CredentialService } from "../services/CredentialService";
 import loginValidator from "../validators/login-validator";
 import authenticate from "../middlewares/authenticate";
 import { AuthRequest } from "../types";
 import validateRefreshToken from "../middlewares/validateRefreshToken";
+import parseRefreshToken from "../middlewares/parseRefreshToken";
 
 const authRouter = express.Router();
 
@@ -66,6 +67,16 @@ authRouter.post(
     validateRefreshToken,
     async (req: Request, res: Response, next: NextFunction) => {
         await authController.refresh(req as AuthRequest, res, next);
+    },
+);
+
+authRouter.post(
+    "/logout",
+
+    // only loggedin user can authenticate
+    parseRefreshToken,
+    async (req: Request, res: Response, next: NextFunction) => {
+        await authController.logout(req as AuthRequest, res, next);
     },
 );
 

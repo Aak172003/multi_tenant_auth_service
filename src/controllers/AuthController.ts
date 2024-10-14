@@ -117,8 +117,7 @@ export class AuthController {
     async login(req: RegisterUserInterface, res: Response, next: NextFunction) {
         const { email, password } = req.body;
 
-        console.log("email, password  : : ", email, password);
-        //     // Validation
+        // Validation
         const result = validationResult(req);
 
         if (!result.isEmpty()) {
@@ -137,8 +136,6 @@ export class AuthController {
         //     // return the response (id)
         try {
             const user = await this.userService.findByEmail(email);
-
-            console.log("this is user ---------- ", user);
             if (!user) {
                 const error = createHttpError(400, "Email does not match");
 
@@ -158,22 +155,19 @@ export class AuthController {
                 return;
             }
 
-            //         // res.status(201).send();
-
             this.logger.info(ResponseMessage.USER_LOGIN_SUCCESSFULLY, {
                 id: user.id,
             });
-            //         // res.status(201).json({ createdUser });
 
             const payload: JwtPayload = {
                 sub: String(user.id),
                 role: user.role,
             };
 
-            //         // Call the generateAccessToken method and get the token
+            // Call the generateAccessToken method and get the token
             const accessToken = this.tokenService.generateAccessToken(payload);
 
-            //         // Persist the refreshToken
+            // Persist the refreshToken
             const newRefreshToken = this.tokenService.persistRefreshToken(user);
 
             const refreshToken = this.tokenService.generateRefreshToken({
@@ -207,26 +201,18 @@ export class AuthController {
 
     async self(req: AuthRequest, res: Response) {
         // Token Extract
-
-        console.log("request auth id ============ ", req.auth);
-
         const user = await this.userService.findById(Number(req.auth.sub));
 
-        console.log("this is user via finfbyId ---------- ", user);
         res.json({ ...user, password: undefined });
     }
 
     async refresh(req: AuthRequest, res: Response, next: NextFunction) {
         try {
-            console.log("-----------------------");
-
             // Prepare payload for accessToken
             const payload: JwtPayload = {
                 sub: req.auth.sub,
                 role: req.auth.role,
             };
-
-            console.log("payload -------------- ", payload);
 
             // Call the generateAccessToken method and get the token
             const accessToken = this.tokenService.generateAccessToken(payload);
@@ -243,10 +229,6 @@ export class AuthController {
                 next(error);
                 return;
             }
-            console.log(
-                "this is user ---- for this i perform token rotation --------- ",
-                user,
-            );
 
             // Persist the refreshToken
             const newRefreshToken = this.tokenService.persistRefreshToken(user);
@@ -275,7 +257,30 @@ export class AuthController {
 
             res.json({ id: user.id });
         } catch (error) {
-            console.log(error);
+            next(error);
+            return;
+        }
+    }
+
+    async logout(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            // delete RefreshToken
+            await this.tokenService.deleteRefreshToken(Number(req.auth.id));
+
+            this.logger.info("Refresh token has been deleted ", {
+                id: req.auth.id,
+            });
+            this.logger.info("user has been logged out ", { id: req.auth.sub });
+
+            // clear cookie after logout
+            res.clearCookie("accessToken");
+            res.clearCookie("refreshToken");
+
+            res.json({
+                success: "true",
+                message: "Logged out successfully",
+            });
+        } catch (error) {
             next(error);
             return;
         }
