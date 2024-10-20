@@ -41,5 +41,5 @@ export class User {
     // Foreign Key
     @ManyToOne(() => Tenant)
     // tenantId is a attribute which is a type of Tenant
-    tenantId: Tenant;
+    tenant: Tenant;
 }
