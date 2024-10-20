@@ -1,8 +1,6 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { Config } from ".";
-import { User } from "../entity/User";
-import { RefreshToken } from "../entity/RefreshToken";
 
 // console.log("Config.DB_NAME from data-source ------ ", Config.DB_NAME);
 // console.log(`For data-source ${Config.NODE_ENV} ENVIRONMENT`);
@@ -31,7 +29,8 @@ export const AppDataSource = new DataSource({
 
     synchronize: false,
     logging: false,
-    entities: [User, RefreshToken],
+    // entities: [User, RefreshToken, Tenant],
+    entities: ["src/entity/*.ts"], // this is wild card pattern
     migrations: ["src/migrations/*.ts"],
     subscribers: [],
 });

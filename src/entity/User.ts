@@ -4,7 +4,9 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
+    ManyToOne,
 } from "typeorm";
+import { Tenant } from "./tenant";
 
 @Entity({ name: "users" })
 export class User {
@@ -35,4 +37,9 @@ export class User {
 
     @CreateDateColumn()
     createdAt: number;
+
+    // Foreign Key
+    @ManyToOne(() => Tenant)
+    // tenantId is a attribute which is a type of Tenant
+    tenantId: Tenant;
 }
