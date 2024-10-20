@@ -26,12 +26,12 @@ export const AppDataSource = new DataSource({
 
     // This synchronize make sure for developement and testing true ,
     // but fot profuction case make sure this value is false
-    // Don't use the this in production
+    // Don't use this in production
     // synchronize: true,
 
-    synchronize: true,
+    synchronize: false,
     logging: false,
     entities: [User, RefreshToken],
-    migrations: [],
+    migrations: ["src/migrations/*.ts"],
     subscribers: [],
 });

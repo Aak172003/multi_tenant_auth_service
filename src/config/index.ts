@@ -7,7 +7,9 @@ import path from "path";
 // config();
 
 // take dynamic value form env file according to environment
-config({ path: path.join(__dirname, `../../.env.${process.env.NODE_ENV}`) });
+config({
+    path: path.join(__dirname, `../../.env.${process.env.NODE_ENV || "dev"}`),
+});
 
 const {
     PORT,
